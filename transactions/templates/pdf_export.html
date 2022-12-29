@@ -1,0 +1,32 @@
+<div class="col-md-10">
+    <h2>Transactions</h2>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Merchant</th>
+            <th scope="col">Category</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Notes</th>
+            <th scope="col">Reimbursable</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for transaction in transactions %}
+            <tr>
+              <td>{{ transaction.date }}</td>
+              <td>{{ transaction.merchant }}</td>
+              <td>{{ transaction.category }}</td>
+              <td>{{ transaction.amount }}</td>
+              <td>{{ transaction.notes }}</td>
+              <td>{{ transaction.reimbursable }}</td>
+              <td>
+                <form action="{% url 'delete_transaction' transaction.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}      
+        </tbody>

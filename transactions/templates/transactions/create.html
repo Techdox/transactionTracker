@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Create Transaction</h1>
+<div class="d-flex justify-content-left">
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group mx-auto">
+          <label for="id_date">Date</label>
+          {{ form.date }}
+        </div>
+        <div class="form-group mx-auto">
+          <label for="id_merchant">Merchant</label>
+          {{ form.merchant }}
+        </div>
+        <div class="form-group mx-auto">
+          <label for="id_category">Category</label>
+          {{ form.category }}
+        </div>
+        <div class="form-group mx-auto">
+          <label for="id_amount">Amount</label>
+          {{ form.amount }}
+        </div>
+        <div class="form-group mx-auto">
+          <label for="id_notes">Notes</label>
+          {{ form.notes }}
+        </div>
+        <div class="form-group mx-auto">
+            <label for="id_reimbursable">Reimbursable</label>
+            {{ form.reimbursable }}
+          </div>
+        <button type="submit" class="btn btn-primary mx-auto">Save</button>
+      </form>
+    </div>
+      
+{% endblock %}

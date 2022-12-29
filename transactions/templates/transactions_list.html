@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row" style="width: 100%;">
+  <div class="col-md-6">
+    <h2>Filter Transactions</h2>
+    <form method="post" action="{% url 'transactions_list' %}" id="filter-form">
+      {% csrf_token %}
+      <input type="hidden" name="form_submitted" value="1">
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary">Filter</button>
+      <a href="{% url 'transactions_list' %}?reset=1" class="btn btn-primary">Reset</a>
+    </form>
+  </div>
+  <div class="col-md-10">
+    <h2>Transactions</h2>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Merchant</th>
+            <th scope="col">Category</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Notes</th>
+            <th scope="col">Reimbursable</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for transaction in transactions %}
+            <tr>
+              <td>{{ transaction.date }}</td>
+              <td>{{ transaction.merchant }}</td>
+              <td>{{ transaction.category }}</td>
+              <td>{{ transaction.amount }}</td>
+              <td>{{ transaction.notes }}</td>
+              <td>{{ transaction.reimbursable }}</td>
+              <td>
+                <form action="{% url 'delete_transaction' transaction.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}      
+        </tbody>
+        <a href="{% url 'export_transactions_pdf' %}" class="btn btn-primary">Export to PDF</a>   
+      </table>
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6 col-md-4">
+            <div class="card text-center mb-4">
+              <div class="card-body">
+                Reimbursable sum: {{ reimbursable_sum }}
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <div class="card text-center mb-4">
+              <div class="card-body">
+                Non-reimbursable sum: {{ non_reimbursable_sum }}
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <div class="card text-center mb-4">
+              <div class="card-body">
+                Lifestyle sum: {{ lifestyle_sum }}
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <div class="card text-center mb-4">
+              <div class="card-body">
+                Bills sum: {{ bills_sum }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+      {% endblock %}
+
+      
+      
