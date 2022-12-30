@@ -1,3 +1,14 @@
+<style>
+  .category {
+    display: inline-block;
+    width: 200px;
+    text-align: center;
+    border: 1px solid black;
+    margin: 10px;
+    padding: 10px;
+  }
+  </style>
+
 {% extends 'base.html' %}
 {% block content %}
 <div class="row" style="width: 100%;">
@@ -11,8 +22,12 @@
       <a href="{% url 'transactions_list' %}?reset=1" class="btn btn-primary">Reset</a>
     </form>
   </div>
+  <div class="col-lg-10">
+    <h1></h1>
+  </div>
   <div class="col-md-10">
     <h2>Transactions</h2>
+    <p>Below is a table of all created transactions</p>
     <table class="table">
         <thead>
           <tr>
@@ -47,33 +62,35 @@
       </table>
       <div class="container">
         <div class="row">
-          <div class="col-sm-6 col-md-4">
-            <div class="card text-center mb-4">
-              <div class="card-body">
-                Reimbursable sum: {{ reimbursable_sum }}
-              </div>
-            </div>
+          <div class="category" style="background-color: lightblue;">
+            Lifestyle: {{ lifestyle_sum }}
           </div>
-          <div class="col-sm-6 col-md-4">
-            <div class="card text-center mb-4">
-              <div class="card-body">
-                Non-reimbursable sum: {{ non_reimbursable_sum }}
-              </div>
-            </div>
+          <div class="category" style="background-color: lightyellow;">
+            Bills: {{ bills_sum }}
           </div>
-          <div class="col-sm-6 col-md-4">
-            <div class="card text-center mb-4">
-              <div class="card-body">
-                Lifestyle sum: {{ lifestyle_sum }}
-              </div>
-            </div>
+          <div class="category" style="background-color: lightblue;">
+            Food: {{ food_sum }}
           </div>
-          <div class="col-sm-6 col-md-4">
-            <div class="card text-center mb-4">
-              <div class="card-body">
-                Bills sum: {{ bills_sum }}
-              </div>
-            </div>
+          <div class="category" style="background-color: lightyellow;">
+            Fuel: {{ fuel_sum }}
+          </div>
+          <div class="category" style="background-color: lightblue;">
+            Transport: {{ transport_sum }}
+          </div>
+          <div class="category" style="background-color: lightyellow;">
+            Other: {{ other_sum }}
+          </div>
+          <div class="category" style="background-color: lightblue;">
+            Personal Spend: {{ non_reimbursable_sum }}
+          </div>
+          <div class="category" style="background-color: lightyellow;">
+            Reimbursable: {{ reimbursable_sum }}
+          </div>
+          <div class="category" style="background-color: lightgreen;">
+            Total: {{ total_sum }}
+          </div>
+          <div class="category" style="background-color: lightgreen;">
+            Budget Left: {{ budget_left }}
           </div>
         </div>
       </div>

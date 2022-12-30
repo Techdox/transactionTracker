@@ -6,8 +6,9 @@ class AmexTransaction(models.Model):
     CATEGORY_CHOICES = (
         ('lifestyle', 'Lifestyle'),
         ('bills', 'Bills'),
-        ('transportation', 'Transportation'),
-        ('entertainment', 'Entertainment'),
+        ('food', 'Food'),
+        ('transport', 'Transport'),
+        ('fuel', 'Fuel'),
         ('other', 'Other'),
     )
     date = models.DateField()

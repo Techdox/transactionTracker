@@ -55,7 +55,47 @@ def transactions_list(request):
     bills_transactions = transactions.filter(category='bills')
     bills_sum = bills_transactions.aggregate(Sum('amount'))['amount__sum']
 
-    return render(request, 'transactions_list.html', {'transactions': transactions, 'form': form, 'reimbursable_sum': reimbursable_sum, 'non_reimbursable_sum': non_reimbursable_sum, 'lifestyle_sum': lifestyle_sum, 'bills_sum': bills_sum})
+    food_transactions = transactions.filter(category='food')
+    food_sum = food_transactions.aggregate(Sum('amount'))['amount__sum']
+
+    fuel_transactions = transactions.filter(category='fuel')
+    fuel_sum = fuel_transactions.aggregate(Sum('amount'))['amount__sum']
+
+    transport_transactions = transactions.filter(category='transport')
+    transport_sum = transport_transactions.aggregate(Sum('amount'))['amount__sum']
+
+    other_transactions = transactions.filter(category='other')
+    other_sum = other_transactions.aggregate(Sum('amount'))['amount__sum']
+
+    total_transactions = transactions
+    total_sum = total_transactions.aggregate(Sum('amount'))['amount__sum']
+
+    if non_reimbursable_sum is not None:
+        budget_left = 900 - non_reimbursable_sum
+    else:
+        budget_left = 900
+
+
+
+
+
+
+
+
+    return render(request, 'transactions_list.html', 
+    {'transactions': transactions,
+     'form': form,
+     'reimbursable_sum': reimbursable_sum, 
+     'non_reimbursable_sum': non_reimbursable_sum, 
+     'lifestyle_sum': lifestyle_sum, 
+     'bills_sum': bills_sum, 
+     'food_sum': food_sum,
+     'fuel_sum': fuel_sum,
+     'transport_sum': transport_sum,
+     'other_sum': other_sum,
+     'total_sum': total_sum,
+     'budget_left': budget_left,
+     })
 
 
 def create_transaction(request):
