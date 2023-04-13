@@ -1,6 +1,5 @@
 from django.db import models
 # Create your models here.
-
 class AmexTransaction(models.Model):
     # Fields for storing information about the transaction
     CATEGORY_CHOICES = (

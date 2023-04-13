@@ -7,6 +7,8 @@ from django.db.models import Sum
 from django.http import HttpResponse
 from xhtml2pdf import pisa
 from io import BytesIO
+from django.views.generic import ListView
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def home(request):
     return render(request, 'home.html')
@@ -33,12 +35,14 @@ def delete_transaction(request, pk):
 def transactions_list(request):
     transactions = AmexTransaction.objects.all()
     form = DateRangeFilterForm(request.POST or None)
+
     if request.POST.get('form_submitted'):
         if form.is_valid():
             # Filter the transactions based on the date range
             start_date = form.cleaned_data['start_date']
             end_date = form.cleaned_data['end_date']
             transactions = transactions.filter(date__range=(start_date, end_date))
+            
     elif request.GET.get('reset'):
         # Reset the form fields and the transactions
         form = DateRangeFilterForm()
@@ -74,13 +78,6 @@ def transactions_list(request):
         budget_left = 900 - non_reimbursable_sum
     else:
         budget_left = 900
-
-
-
-
-
-
-
 
     return render(request, 'transactions_list.html', 
     {'transactions': transactions,
