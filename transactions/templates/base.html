@@ -20,14 +20,17 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
-            <li class="nav-item active">
-              <a class="nav-link" href="/">Home</a>
+            <li class="nav-item">
+              <a class="nav-link" href="/" id="home-link">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/transactions/">Transactions</a>
+              <a class="nav-link" href="/transactions/" id="transactions-link">Transactions</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/transactions/create/">Create Transaction</a>
+              <a class="nav-link" href="/transactions/create/" id="create-transaction-link">Create Transaction</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/budget/" id="budget-link">Budget</a>
             </li>
           </ul>
         </div>
@@ -35,10 +38,23 @@
     <div class="container mt-5">
       {% block content %}{% endblock %}
     </div>
+    <script>
+      // Get the current page URL
+      const currentUrl = window.location.pathname;
+    
+      // Get the corresponding navbar link element and add the 'active' class to it
+      if (currentUrl === '/') {
+        document.getElementById('home-link').classList.add('active');
+      } else if (currentUrl === '/transactions/') {
+        document.getElementById('transactions-link').classList.add('active');
+      } else if (currentUrl === '/transactions/create/') {
+        document.getElementById('create-transaction-link').classList.add('active');
+      }
+    </script>
   </body>
   <footer class="bg-light py-3 mt-5">
     <div class="container">
-      <p class="text-center mb-0">Copyright &copy; 2021. All rights reserved.</p>
+      <p class="text-center mb-0">Copyright &copy; 2023 Techdox. All rights reserved.</p>
     </div>
   </footer>
   

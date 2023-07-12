@@ -8,7 +8,8 @@ from django.http import HttpResponse
 from xhtml2pdf import pisa
 from io import BytesIO
 from django.views.generic import ListView
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import Paginator
+# test
 
 def home(request):
     return render(request, 'home.html')
@@ -33,7 +34,7 @@ def delete_transaction(request, pk):
 
 
 def transactions_list(request):
-    transactions = AmexTransaction.objects.all()
+    all_transactions = AmexTransaction.objects.all()
     form = DateRangeFilterForm(request.POST or None)
 
     if request.POST.get('form_submitted'):
@@ -41,37 +42,41 @@ def transactions_list(request):
             # Filter the transactions based on the date range
             start_date = form.cleaned_data['start_date']
             end_date = form.cleaned_data['end_date']
-            transactions = transactions.filter(date__range=(start_date, end_date))
-            
+            all_transactions = all_transactions.filter(date__range=(start_date, end_date))
+
     elif request.GET.get('reset'):
         # Reset the form fields and the transactions
         form = DateRangeFilterForm()
-        transactions = AmexTransaction.objects.all()
+        all_transactions = AmexTransaction.objects.all()
+
+    paginator = Paginator(all_transactions, 10)  # Show 10 transactions per page
+
+    page_number = request.GET.get('page')
+    transactions = paginator.get_page(page_number)
 
     # Calculate the sum of reimbursable transactions
     reimbursable_sum = AmexTransaction.objects.filter(reimbursable=True).aggregate(Sum('amount'))['amount__sum']
-
     non_reimbursable_sum = AmexTransaction.objects.filter(reimbursable=False).aggregate(Sum('amount'))['amount__sum']
 
-    lifestyle_transactions = transactions.filter(category='lifestyle')
+    lifestyle_transactions = all_transactions.filter(category='lifestyle')
     lifestyle_sum = lifestyle_transactions.aggregate(Sum('amount'))['amount__sum']
 
-    bills_transactions = transactions.filter(category='bills')
+    bills_transactions = all_transactions.filter(category='bills')
     bills_sum = bills_transactions.aggregate(Sum('amount'))['amount__sum']
 
-    food_transactions = transactions.filter(category='food')
+    food_transactions = all_transactions.filter(category='food')
     food_sum = food_transactions.aggregate(Sum('amount'))['amount__sum']
 
-    fuel_transactions = transactions.filter(category='fuel')
+    fuel_transactions = all_transactions.filter(category='fuel')
     fuel_sum = fuel_transactions.aggregate(Sum('amount'))['amount__sum']
 
-    transport_transactions = transactions.filter(category='transport')
+    transport_transactions = all_transactions.filter(category='transport')
     transport_sum = transport_transactions.aggregate(Sum('amount'))['amount__sum']
 
-    other_transactions = transactions.filter(category='other')
+    other_transactions = all_transactions.filter(category='other')
     other_sum = other_transactions.aggregate(Sum('amount'))['amount__sum']
 
-    total_transactions = transactions
+    total_transactions = all_transactions
     total_sum = total_transactions.aggregate(Sum('amount'))['amount__sum']
 
     if non_reimbursable_sum is not None:
@@ -79,20 +84,20 @@ def transactions_list(request):
     else:
         budget_left = 900
 
-    return render(request, 'transactions_list.html', 
-    {'transactions': transactions,
-     'form': form,
-     'reimbursable_sum': reimbursable_sum, 
-     'non_reimbursable_sum': non_reimbursable_sum, 
-     'lifestyle_sum': lifestyle_sum, 
-     'bills_sum': bills_sum, 
-     'food_sum': food_sum,
-     'fuel_sum': fuel_sum,
-     'transport_sum': transport_sum,
-     'other_sum': other_sum,
-     'total_sum': total_sum,
-     'budget_left': budget_left,
-     })
+    return render(request, 'transactions_list.html', {
+        'transactions': transactions,
+        'form': form,
+        'reimbursable_sum': reimbursable_sum,
+        'non_reimbursable_sum': non_reimbursable_sum,
+        'lifestyle_sum': lifestyle_sum,
+        'bills_sum': bills_sum,
+        'food_sum': food_sum,
+        'fuel_sum': fuel_sum,
+        'transport_sum': transport_sum,
+        'other_sum': other_sum,
+        'total_sum': total_sum,
+        'budget_left': budget_left,
+    })
 
 
 def create_transaction(request):
@@ -113,3 +118,46 @@ def create_transaction(request):
     return render(request, 'transactions/create.html', {'form': form})
 
 
+from django.shortcuts import render
+
+from django.shortcuts import render
+
+def budget_view(request):
+    if request.method == 'POST':
+        total_income = request.POST.get('total_income')
+        bill_1 = request.POST.get('bill_1')
+        bill_2 = request.POST.get('bill_2')
+
+        # Validate inputs
+        errors = []
+        if not total_income:
+            errors.append("Total monthly income is required.")
+
+        # Filter out empty bill values
+        bills = [float(bill) for bill in [bill_1, bill_2] if bill]
+
+        if not bills:
+            errors.append("At least one bill value is required.")
+
+        if errors:
+            return render(request, 'budget.html', {'errors': errors})
+
+        # Perform calculations
+        try:
+            total_income = float(total_income)
+
+            total_utilized = sum(bills)
+            remaining_budget = total_income - total_utilized
+
+            return render(request, 'budget.html', {
+                'total_income': total_income,
+                'bills': bills,
+                'total_utilized': total_utilized,
+                'remaining_budget': remaining_budget,
+            })
+        except ValueError:
+            errors.append("Invalid input. Please enter numeric values for income and bills.")
+            return render(request, 'budget.html', {'errors': errors})
+
+    else:
+        return render(request, 'budget.html')

@@ -1,3 +1,6 @@
+{% extends 'base.html' %}
+
+{% block content %}
 <style>
   .category {
     display: inline-block;
@@ -7,10 +10,8 @@
     margin: 10px;
     padding: 10px;
   }
-  </style>
+</style>
 
-{% extends 'base.html' %}
-{% block content %}
 <div class="row" style="width: 300px%;">
   <div class="col-md-6">
     <h2>Filter Transactions</h2>
@@ -58,94 +59,109 @@
           </tr>
         {% endfor %}      
       </tbody>
-      <a href="{% url 'export_transactions_pdf' %}" class="btn btn-primary">Export to PDF</a>   
-    </table>    
-    <div class="container">
-      <div class="row">
-        <div class="col-md-4">
-          <div class="card text-center bg-light mb-3">
-            <div class="card-header">Lifestyle</div>
-            <div class="card-body">
-              <h5 class="card-title">{{ lifestyle_sum.normalize }}</h5>
-            </div>
+    </table>
+
+    <div class="pagination">
+      <span class="step-links">
+        {% if transactions.has_previous %}
+          <a href="?page=1">&laquo; first</a>
+          <a href="?page={{ transactions.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current-page">{{ transactions.number }}</span>
+
+        {% if transactions.has_next %}
+          <a href="?page={{ transactions.next_page_number }}">next</a>
+          <a href="?page={{ transactions.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+      </span>
+    </div>
+
+    <a href="{% url 'export_transactions_pdf' %}" class="btn btn-primary">Export to PDF</a>   
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card text-center bg-light mb-3">
+          <div class="card-header">Lifestyle</div>
+          <div class="card-body">
+            <h5 class="card-title">{{ lifestyle_sum.normalize }}</h5>
           </div>
         </div>
-        <div class="col-md-4">
-          <div class="card text-center bg-light mb-3">
-            <div class="card-header">Bills</div>
-            <div class="card-body">
-              <h5 class="card-title">{{ bills_sum.normalize }}</h5>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card text-center bg-light mb-3">
-            <div class="card-header">Food</div>
-            <div class="card-body">
-              <h5 class="card-title">{{ food_sum.normalize }}</h5>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card text-center bg-light mb-3">
-            <div class="card-header">Fuel</div>
-            <div class="card-body">
-              <h5 class="card-title">{{ fuel_sum.normalize }}</h5>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card text-center bg-light mb-3">
-            <div class="card-header">Transport</div>
-            <div class="card-body">
-              <h5 class="card-title">{{ transport_sum.normalize }}</h5>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card text-center bg-light mb-3">
-            <div class="card-header">Other</div>
-            <div class="card-body">
-              <h5 class="card-title">{{ other_sum.normalize }}</h5>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card text-center bg-light mb-3">
-            <div class="card-header">Reimbursable</div>
-            <div class="card-body">
-              <h5 class="card-title">{{ reimbursable_sum.normalize }}</h5>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card text-center bg-light mb-3">
-            <div class="card-header">Personal Spend</div>
-            <div class="card-body">
-              <h5 class="card-title">{{ non_reimbursable_sum.normalize }}</h5>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card text-center bg-light mb-3">
-            <div class="card-header">Total Spend</div>
-            <div class="card-body">
-              <h5 class="card-title">{{ total_sum.normalize }}</h5>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card text-center bg-light mb-3">
-            <div class="card-header">Budget Left</div>
-            <div class="card-body">
-              <h5 class="card-title">{{ budget_left.normalize }}</h5>
-            </div>
-          </div>
-        </div>
-        <!-- ... -->
       </div>
+      <div class="col-md-4">
+        <div class="card text-center bg-light mb-3">
+          <div class="card-header">Bills</div>
+          <div class="card-body">
+            <h5 class="card-title">{{ bills_sum.normalize }}</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card text-center bg-light mb-3">
+          <div class="card-header">Food</div>
+          <div class="card-body">
+            <h5 class="card-title">{{ food_sum.normalize }}</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card text-center bg-light mb-3">
+          <div class="card-header">Fuel</div>
+          <div class="card-body">
+            <h5 class="card-title">{{ fuel_sum.normalize }}</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card text-center bg-light mb-3">
+          <div class="card-header">Transport</div>
+          <div class="card-body">
+            <h5 class="card-title">{{ transport_sum.normalize }}</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card text-center bg-light mb-3">
+          <div class="card-header">Other</div>
+          <div class="card-body">
+            <h5 class="card-title">{{ other_sum.normalize }}</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card text-center bg-light mb-3">
+          <div class="card-header">Reimbursable</div>
+          <div class="card-body">
+            <h5 class="card-title">{{ reimbursable_sum.normalize }}</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card text-center bg-light mb-3">
+          <div class="card-header">Personal Spend</div>
+          <div class="card-body">
+            <h5 class="card-title">{{ non_reimbursable_sum.normalize }}</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card text-center bg-light mb-3">
+          <div class="card-header">Total Spend</div>
+          <div class="card-body">
+            <h5 class="card-title">{{ total_sum.normalize }}</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card text-center bg-light mb-3">
+          <div class="card-header">Budget Left</div>
+          <div class="card-body">
+            <h5 class="card-title">{{ budget_left.normalize }}</h5>
+          </div>
+        </div>
+      </div>
+      <!-- ... -->
+    </div>
   </div>
 {% endblock %}
-
-      
-      
