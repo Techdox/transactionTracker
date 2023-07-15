@@ -2,8 +2,17 @@ from django import forms
 from .models import AmexTransaction
 
 class DateRangeFilterForm(forms.Form):
-    start_date = forms.DateField()
-    end_date = forms.DateField()
+    start_date = forms.DateField(
+        label='Start Date',
+        input_formats=['%d/%m/%Y'],  # Set the desired date format
+        widget=forms.DateInput(attrs={'placeholder': 'dd/mm/yyyy'})
+    )
+    end_date = forms.DateField(
+        label='End Date',
+        input_formats=['%d/%m/%Y'],  # Set the desired date format
+        widget=forms.DateInput(attrs={'placeholder': 'dd/mm/yyyy'})
+    )
+
 
 class DateInput(forms.DateInput):
     input_type = 'date'
